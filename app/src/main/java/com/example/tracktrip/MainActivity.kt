@@ -3,8 +3,10 @@ package com.example.tracktrip
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +26,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -38,38 +39,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.tracktrip.ui.theme.TrackTripTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            TrackTripTheme {
-                Surface {
-                    StopList()
-                }
+        setContentView(R.layout.xml_ui_layout)
+
+        val stops = Readtext(context = this)
+        var curprogress = 0
+        var maxdist = 0
+        var stopcount = 0
+        stops.forEach {stop -> maxdist+=stop.distFromSource}
+
+        val nextBtn = findViewById<Button>(R.id.nextStop)
+        val unitBtn = findViewById<Button>(R.id.changeUnit)
+        val progBar = findViewById<ProgressBar>(R.id.ProgBar)
+        val distCoveredText = findViewById<TextView>(R.id.DistanceCovered)
+        val distLeftText = findViewById<TextView>(R.id.DistanceLeft)
+
+        progBar.setMax(maxdist)
+        progBar.setProgress(curprogress)
+        distCoveredText.setText(" At ${stops[0].stopName}, Distance Covered : $curprogress")
+        distLeftText.setText(" Distance Left : ${maxdist - curprogress}")
+
+        nextBtn.setOnClickListener() {
+            stops.forEach {
+                curstop -> Log.i("readingtest","${curstop.stopName}")
             }
         }
+
+
+
+
+//        setContent {
+//            TrackTripTheme {
+//                Surface {
+//                    StopList()
+//                }
+//            }
+//        }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TrackTripTheme {
-        Greeting("Android")
-    }
-}
 
 
 @Preview( showBackground = false)
