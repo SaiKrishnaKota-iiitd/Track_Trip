@@ -56,7 +56,7 @@ import java.io.InputStreamReader
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             TrackTripTheme {
                 Surface {
@@ -106,24 +106,25 @@ fun StopList(
 ) {
     val curcontext = LocalContext.current
     var totalDistance = 0
-    var curprogress  =  remember { mutableStateOf(0) }
     var stopCount = remember { mutableStateOf(0) }
     var stopList = remember { Readtext(context = curcontext) }
     var isKM = remember { mutableStateOf(true) }
     for (i in 1..stopList.size-1) totalDistance += stopList[i].distFromSource
+    var curprogress  =  remember { mutableStateOf(0) }
     var nextStop : () -> Unit = {
         if (stopCount.value < stopList.size ) {
-//            for (i in 0..stopCount.value) {
-                curprogress.value += stopList[stopCount.value].distFromSource
-//            }
-            Log.i("curprog","$curprogress")
             stopCount.value++
+            if(stopCount.value > 0) {
+                curprogress.value += stopList[stopCount.value].distFromSource
+            }
+            Log.i("curprog","$curprogress")
+            Log.i("STOPCOUNT","${stopCount.value}")
         }
         else stopCount.value
     }
     Column (
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 5.dp)
+            .padding(horizontal = 10.dp, vertical = 25.dp)
             .fillMaxSize()
 //            .align(Alignment.CenterVertically)
     ) {
@@ -131,26 +132,19 @@ fun StopList(
             LazyColumn (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp, horizontal = 16.dp)
-                    .background(color = Color(0xff1d2024), shape = RoundedCornerShape(6))
+                    .padding(vertical = 20.dp, horizontal = 16.dp)
+                    .background(color = Color(0xff1d2024), shape = RoundedCornerShape(20.dp))
                     .weight(1f),
-//                    .align(alignment = Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-
             ) {
                 itemsIndexed(stopList) { ind,curstop ->
-//                    Text(text = "stop $ind",
-//                        modifier  = Modifier
-//                            .padding(bottom = 16.dp),
-//                        color = if(ind <= stopCount.value) Color.Red else Color.Blue
-//                    )
                     Box(modifier = Modifier
                         .width(300.dp)
-                        .padding(top = 15.dp)
+                        .padding(vertical = 10.dp)
                     ) {
-                        Text("${curstop.stopName}",
-                            color = if (ind <= stopCount.value) Color(0xffdae2f9) else Color(0xffaac7ff),
+                        Text("${curstop.stopName} ${if (curstop.visaRequired) "( visa required )" else ""}",
+                            color = if (ind <= stopCount.value) Color.Black else Color(0xffaac7ff),
                             textAlign = TextAlign.Center,
 //                            fontFamily = FontFamily(fonts = sa),
                             fontStyle = FontStyle.Italic,
@@ -158,10 +152,12 @@ fun StopList(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(
-                                    color = Color(0xff3e4759),
+                                    color = if (ind <= stopCount.value) Color(0xffddbce0) else Color(
+                                        0xff3e4759
+                                    ),
                                     shape = RoundedCornerShape(60)
                                 )
-                                .padding(vertical = 10.dp)
+                                .padding(vertical = 10.dp, horizontal = 20.dp)
 
                         )
                     }
@@ -188,25 +184,28 @@ fun StopList(
         Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color(0xff1d2024), shape = RoundedCornerShape(12))
-                .padding(vertical = 20.dp, horizontal = 36.dp),
-//                    .align(alignment = Alignment.CenterVertically),
+                .padding(horizontal = 16.dp)
+                .background(color = Color(0xff1d2024), shape = RoundedCornerShape(20.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             LinearProgressIndicator(
                 progress = { curprogress.value/totalDistance.toFloat() },
                 modifier = Modifier
-                    .align(alignment = Alignment.CenterHorizontally),
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(vertical = 20.dp),
             )
-            Spacer(modifier = Modifier.size(20.dp))
+//            Spacer(modifier = Modifier.size(20.dp))
             Text(
-                text = "Distance Covered : ${if (isKM.value) curprogress.value else curprogress.value*2}",
+                text = if(stopCount.value ==0) "At the source" else "Distance Covered : ${if (isKM.value) curprogress.value else curprogress.value*0.621371}",
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.size(20.dp))
+//            Spacer(modifier = Modifier.size(20.dp))
             Text(
-                text = "Distance left : ${if(isKM.value) (totalDistance - curprogress.value) else (totalDistance - curprogress.value)*2}"
+                text = if (stopCount.value != stopList.size - 1) "Distance left : ${if(isKM.value) (totalDistance - curprogress.value) 
+                else (totalDistance - curprogress.value)*0.621371} ${if (isKM.value) "KM" else "MILES"}"
+                else "Destinaion Reached",
+                modifier = Modifier.padding(vertical = 20.dp)
             )
         }
 
@@ -239,8 +238,9 @@ fun StopList(
                 )
             }
         }
-
+        Spacer(modifier = Modifier.size(15.dp))
     }
+
 }
 
 data class Stop (val stopName : String,val distFromSource : Int,val visaRequired : Boolean)
