@@ -1,18 +1,14 @@
 package com.example.tracktrip
 
-import android.graphics.fonts.Font
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,26 +18,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,18 +40,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tracktrip.ui.theme.TrackTripTheme
 import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
 import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContent {
             TrackTripTheme {
                 Surface {
-//                    StopList(stopList = mutableListOf("stop1","stop2","stop3","stop4","stop5"))
                     StopList()
                 }
             }
@@ -91,7 +78,6 @@ fun TripAppPreview (
     color : Color = MaterialTheme.colorScheme.background
 ) {
     var tempList = mutableListOf("stop1","stop2","stop3","stop4","stop5")
-//    StopList(stopList = tempList )
     StopList()
 }
 
@@ -100,9 +86,6 @@ fun StopList(
     modifier : Modifier = Modifier
         .statusBarsPadding()
         .fillMaxSize()
-        .padding(top = 40.dp),
-    color : Color = Color.Black,
-//    stopList : MutableList<String>,
 ) {
     val curcontext = LocalContext.current
     var totalDistance = 0
@@ -126,7 +109,6 @@ fun StopList(
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 25.dp)
             .fillMaxSize()
-//            .align(Alignment.CenterVertically)
     ) {
         if (stopList.size >3) {
             LazyColumn (
@@ -195,80 +177,50 @@ fun StopList(
                     .align(alignment = Alignment.CenterHorizontally)
                     .padding(vertical = 20.dp),
             )
-//            Spacer(modifier = Modifier.size(20.dp))
             Text(
                 text = if(stopCount.value ==0) "At the source" else "Distance Covered : ${if (isKM.value) curprogress.value else curprogress.value*0.621371}",
                 textAlign = TextAlign.Center
             )
-//            Spacer(modifier = Modifier.size(20.dp))
             Text(
                 text = if (stopCount.value != stopList.size - 1) "Distance left : ${if(isKM.value) (totalDistance - curprogress.value) 
                 else (totalDistance - curprogress.value)*0.621371} ${if (isKM.value) "KM" else "MILES"}"
                 else "Destinaion Reached",
                 modifier = Modifier.padding(vertical = 20.dp)
             )
-        }
-
-        Spacer(modifier = Modifier.size(20.dp))
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { isKM.value = !isKM.value },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xffddbce0)
-                )
+            Row (
+                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "change units",
-                    color = Color(0xff3f2844)
-                )
-            }
-            Spacer (modifier = Modifier.size(16.dp))
-            Button(
-                onClick = nextStop,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xffddbce0)
-                )
-            ) {
-                Text(
-                    text = "next stop reached",
-                    color = Color(0xff3f2844)
-                )
+                Button(
+                    onClick = { isKM.value = !isKM.value },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xffddbce0)
+                    )
+                ) {
+                    Text(
+                        text = "change units",
+                        color = Color(0xff3f2844)
+                    )
+                }
+                Spacer (modifier = Modifier.size(16.dp))
+                Button(
+                    onClick = nextStop,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xffddbce0)
+                    )
+                ) {
+                    Text(
+                        text = "next stop reached",
+                        color = Color(0xff3f2844)
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.size(15.dp))
     }
 
 }
 
 data class Stop (val stopName : String,val distFromSource : Int,val visaRequired : Boolean)
-
-fun ReadAndSetStops() : MutableList<Stop> {
-    val fileName  = "assets/stops.csv"
-    var stops = mutableListOf<Stop>()
-    var file = File(fileName)
-//    var newfile = Context.
-    var lines = file.readLines()
-    var tokens = listOf<String>()
-    lines.forEach {textlist ->
-        tokens = textlist.split(",")
-        if (tokens.size == 3) {
-            stops.add(
-                Stop(
-                    stopName = tokens[0],
-                    distFromSource = tokens[1].toInt(),
-                    visaRequired = if (tokens[2] == "yes") true else false
-                )
-            )
-        }
-    }
-
-    var inp =
-    return stops
-}
-
 
 fun Readtext (context: Context) : MutableList<Stop> {
     var curfile = context.assets.open("stops.txt")
