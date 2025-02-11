@@ -17,8 +17,15 @@
             android:layout_weight="2"
             android:layout_marginBottom="20dp"
             android:alpha="1"
-            android:backgroundTint="@color/purple_200"
+
             app:cardCornerRadius="20dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/stopList"
+                android:foregroundGravity="center"/>
+
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
