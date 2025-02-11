@@ -178,12 +178,17 @@ fun StopList(
                     .padding(vertical = 20.dp),
             )
             Text(
-                text = if(stopCount.value ==0) "At the source" else "Distance Covered : ${if (isKM.value) curprogress.value else curprogress.value*0.621371}",
+                text = if(stopCount.value ==0) "At the source"
+                    else "Distance Covered : ${
+                        if (isKM.value) curprogress.value else curprogress.value*0.62
+                        } ${
+                            if (isKM.value) "KM" else "MILES"
+                        }",
                 textAlign = TextAlign.Center
             )
             Text(
                 text = if (stopCount.value != stopList.size - 1) "Distance left : ${if(isKM.value) (totalDistance - curprogress.value) 
-                else (totalDistance - curprogress.value)*0.621371} ${if (isKM.value) "KM" else "MILES"}"
+                else (totalDistance - curprogress.value)*0.62} ${if (isKM.value) "KM" else "MILES"}"
                 else "Destinaion Reached",
                 modifier = Modifier.padding(vertical = 20.dp)
             )
@@ -198,7 +203,7 @@ fun StopList(
                     )
                 ) {
                     Text(
-                        text = "change units",
+                        text = "Change Units",
                         color = Color(0xff3f2844)
                     )
                 }
@@ -210,7 +215,7 @@ fun StopList(
                     )
                 ) {
                     Text(
-                        text = "next stop reached",
+                        text = "Next Stop Reached",
                         color = Color(0xff3f2844)
                     )
                 }
