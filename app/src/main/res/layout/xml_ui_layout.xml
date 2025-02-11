@@ -17,14 +17,16 @@
             android:layout_weight="2"
             android:layout_marginBottom="20dp"
             android:alpha="1"
-
+            android:outlineSpotShadowColor="@color/white"
+            android:background="@color/purple_200"
             app:cardCornerRadius="20dp">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stopList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/stopList"
-                android:foregroundGravity="center"/>
+                android:background="@color/indigo"
+                android:foregroundGravity="center" />
 
         </androidx.cardview.widget.CardView>
 
@@ -38,7 +40,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stopCard"
             app:cardCornerRadius="20dp"
-            android:backgroundTint="@color/purple_200">
+            android:outlineSpotShadowColor="@color/white"
+            android:backgroundTint="@color/indigo">
 
 
             <LinearLayout
@@ -55,7 +58,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="5dp"
                     android:alpha="1"
-                    android:background="@color/purple_200"
+                    android:background="@color/indigo"
                     android:max="100"
                     android:progress="30"
                     android:progressTint="@color/white" />

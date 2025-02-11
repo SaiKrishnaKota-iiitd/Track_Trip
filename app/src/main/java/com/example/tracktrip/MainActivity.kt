@@ -11,6 +11,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.cardview.widget.CardView
+import androidx.compose.runtime.internal.rememberComposableLambda
+import androidx.compose.runtime.mutableStateOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -51,10 +53,12 @@ class MainActivity : ComponentActivity() {
 //                if(stopcount != stops.size -1) stopcount++
                 curprogress+=stops[stopcount].distFromSource
                 progBar.progress = curprogress
-                distCoveredText.text = " At ${stops[stopcount].stopName}, Distance Covered : $curprogress ${
+                distCoveredText.text = " At ${stops[stopcount].stopName}, Distance Covered : ${
+                    if (isMile) curprogress*0.62 else curprogress} ${
                     if (isMile) "MILES" else "KM"
                 }"
-                distLeftText.text = " Distance Left : ${maxdist - curprogress} ${
+                distLeftText.text = " Distance Left : ${
+                    if(isMile) (maxdist - curprogress)*0.62 else (maxdist - curprogress)} ${
                     if (isMile) "MILES" else "KM"
                 }"
             }
@@ -67,10 +71,10 @@ class MainActivity : ComponentActivity() {
         unitBtn.setOnClickListener {
             isMile = !isMile
             if (stopcount < stops.size) {
-                distCoveredText.text = " At ${stops[stopcount].stopName}, Distance Covered : $curprogress ${
+                distCoveredText.text = " At ${stops[stopcount].stopName}, Distance Covered : ${if (isMile) curprogress*0.62 else curprogress} ${
                     if (isMile) "MILES" else "KM"
                 }"
-                distLeftText.text = " Distance Left : ${maxdist - curprogress} ${
+                distLeftText.text = " Distance Left : ${if (isMile) (maxdist - curprogress)*0.62 else (maxdist - curprogress)} ${
                     if (isMile) "MILES" else "KM"
                 }"
             }
